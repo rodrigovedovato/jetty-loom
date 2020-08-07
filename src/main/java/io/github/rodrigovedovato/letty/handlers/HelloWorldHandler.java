@@ -2,7 +2,7 @@ package io.github.rodrigovedovato.letty.handlers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.ServletException;
+import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +13,8 @@ public class HelloWorldHandler extends AbstractHandler
 {
     final String greeting;
     final String body;
+
+    private Random random = new Random();
 
     public HelloWorldHandler() {
         this("Hello World");
@@ -43,6 +45,15 @@ public class HelloWorldHandler extends AbstractHandler
             out.println(body);
         }
 
-        baseRequest.setHandled(true);
+        int low = 500;
+        int high = 1000;
+        int result = random.nextInt(high-low) + low;
+
+        try {
+            Thread.sleep(Integer.toUnsignedLong(result));
+            baseRequest.setHandled(true);
+        } catch (InterruptedException ex){
+            baseRequest.setHandled(false);
+        }
     }
 }

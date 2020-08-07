@@ -7,7 +7,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 
 public class JettyServer {
-    public static Server createServer(int port) {
+    public static Server createLoomBasedServer(int port) {
         var server = new Server(new LoomThreadPool());
 
         ServerConnector connector = new ServerConnector(server);
@@ -19,8 +19,17 @@ public class JettyServer {
         return server;
     }
 
+    public static Server createThreadPoolBasedServer(int port) {
+        var server = new Server(port);
+        server.setHandler(new HelloWorldHandler());
+
+        return server;
+    }
+
     public static void main(String[] args) throws Exception {
-        var server = createServer(8080);
+        var server = createLoomBasedServer(8080);
+        //var server = createThreadPoolBasedServer(8080);
+
         server.start();
         server.join();
     }
