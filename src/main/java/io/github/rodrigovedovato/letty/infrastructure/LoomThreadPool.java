@@ -3,11 +3,14 @@ package io.github.rodrigovedovato.letty.infrastructure;
 import org.eclipse.jetty.util.thread.ThreadPool;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class LoomThreadPool implements ThreadPool {
-    ExecutorService executorService = Executors.newVirtualThreadExecutor();
+    private final ExecutorService executorService;
+
+    public LoomThreadPool(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
 
     @Override
     public void join() throws InterruptedException {

@@ -42,7 +42,8 @@ repositories {
 }  
   
 dependencies {  
-    compile 'org.eclipse.jetty:jetty-server:9.4.31.v20200723'  
+    compile 'org.eclipse.jetty:jetty-server:9.4.31.v20200723'
+    compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
 }
 
 application {
