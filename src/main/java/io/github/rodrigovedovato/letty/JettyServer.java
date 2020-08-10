@@ -27,8 +27,17 @@ public class JettyServer {
     }
 
     public static void main(String[] args) throws Exception {
-        var server = createLoomBasedServer(8080);
-        //var server = createThreadPoolBasedServer(8080);
+        var port = 8080;
+        Server server = null;
+        var serverMode = System.getenv("SERVER_MODE");
+
+        if ("loom".equalsIgnoreCase(serverMode)) {
+            server = createLoomBasedServer(port);
+        } else if ("standard".equalsIgnoreCase(serverMode)) {
+            server = createThreadPoolBasedServer(port);
+        } else {
+            throw new RuntimeException();
+        }
 
         server.start();
         server.join();
