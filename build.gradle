@@ -1,21 +1,28 @@
-plugins {  
+plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation 'org.eclipse.jetty:jetty-server:11.0.6'
+}
+application {
+    mainClass = "io.github.rodrigovedovato.letty.JettyServer"
 }
 
-assert hasProperty('javaHome'): "Set the property 'javaHome' in your your gradle.properties pointing to a Java 6 or 7 installation"
-assert hasProperty('targetJavaVersion'): "Set the property 'targetJavaVersion' in your your gradle.properties to '1.6' or '1.7'"
+def javaHome = "$System.env.JAVA_HOME" as String
 
-java {
-    sourceCompatibility = JavaVersion.toVersion(targetJavaVersion)
-}
+apply plugin: 'java'
 
-def javaExecutablesPath = new File(javaHome, 'bin')
-def javaExecutables = [:].withDefault { execName ->
-    def executable = new File(javaExecutablesPath, execName)
-    assert executable.exists(): "There is no ${execName} executable in ${javaExecutablesPath}"
-    executable
+sourceCompatibility = JavaVersion.VERSION_18
+targetCompatibility = JavaVersion.VERSION_18
+
+compileJava {
+    options.fork = true
+    options.forkOptions.executable = "$javaHome/../bin/javac"
 }
 
 tasks.withType(AbstractCompile) {
@@ -25,29 +32,4 @@ tasks.withType(AbstractCompile) {
     }
 }
 
-tasks.withType(Javadoc) {
-    executable = javaExecutables.javadoc
-}
 
-tasks.withType(Test) {
-    executable = javaExecutables.java
-}
-
-tasks.withType(JavaExec) {
-    executable = javaExecutables.java
-}
-
-repositories {  
-    jcenter()  
-}  
-  
-dependencies {  
-    compile 'org.eclipse.jetty:jetty-server:9.4.31.v20200723'  
-}
-
-application {
-    mainClassName = "io.github.rodrigovedovato.letty.JettyServer"
-}
-  
-compileJava.options.fork = true
-compileJava.options.forkOptions.executable = "/home/rodrigo/bin/jdk-16/bin/javac"
